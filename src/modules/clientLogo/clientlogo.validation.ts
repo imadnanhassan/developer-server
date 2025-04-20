@@ -1,6 +1,6 @@
 import { z } from "zod";
 
 export const ClientLogoSchema = z.object({
-  image: z.string().url("Image must be a valid URL"),
-  link: z.string().url("Link must be a valid URL"),
+  image: z.string(), // File upload (no changes)
+  link: z.string().default(""), // Default empty string if not provided
 });

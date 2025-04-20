@@ -22,10 +22,10 @@ const addClientLogo = catchAsync(async (req: Request, res: Response) => {
   );
   const validatedData = ClientLogoSchema.parse({
     ...req.body,
-    image: cloudinaryResult.secure_url,
+    image: cloudinaryResult.secure_url || "", // Ensure image is always a string
   });
 
-  const newPortfolio = await ClientLogoService.clientLogoInDB(validatedData);
+  const newPortfolio = await ClientLogoService.clientLogoInDB(validatedData );
   sendResponse(res, {
     statusCode: 200,
     success: true,

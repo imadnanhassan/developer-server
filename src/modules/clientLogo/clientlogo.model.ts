@@ -4,7 +4,7 @@ import { ClientLogo } from "./clientlogo.interfacec";
 const ClientLogoSchema = new Schema<ClientLogo>(
   {
     image: { type: String, required: true },
-    link: { type: String, required: true },
+    link: { type: String, required: false, default: "#" }, 
   },
   { timestamps: true }
 );
