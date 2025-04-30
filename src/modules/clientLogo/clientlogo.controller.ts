@@ -44,7 +44,68 @@ const getAllClientLogos = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleClientLogo = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const logo = await ClientLogoService.getSingleClientLogoInDB(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Client logo retrieved successfully",
+    data: logo,
+  });
+});
+
+const updateClientLogo = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const file = req.file;
+  let imageUrl = undefined;
+
+  if (file) {
+    const cloudinaryResult = await sendImageToCloudinary(
+      file.filename,
+      file.path
+    );
+    imageUrl = cloudinaryResult.secure_url || ""; // Ensure image is always a string
+  }
+
+  const validatedData = ClientLogoSchema.parse({
+    ...req.body,
+    ...(imageUrl && { image: imageUrl }), // Only include image if it exists
+  });
+
+  const updatedLogo = await ClientLogoService.updateClientLogoInDB(id, validatedData);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Client logo updated successfully",
+    data: updatedLogo,
+  });
+});
+const deleteClientLogo = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const logo = await ClientLogoService.getSingleClientLogoInDB(id);
+  if (!logo) {
+    return sendResponse(res, {
+      statusCode: 404,
+      success: false,
+      message: "Client logo not found",
+      data: null,
+    });
+  }
+  await logo.deleteOne();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Client logo deleted successfully",
+    data: null,
+  });
+}
+);
+
 export const ClientLogoController = {
   addClientLogo,
   getAllClientLogos,
+  getSingleClientLogo,
+  updateClientLogo,
+  deleteClientLogo,
 };

@@ -5,6 +5,7 @@ const ClientLogoSchema = new Schema<ClientLogo>(
   {
     image: { type: String, required: true },
     link: { type: String, required: false, default: "#" }, 
+    name: { type: String, required: false, default: "Company name" }, 
   },
   { timestamps: true }
 );
